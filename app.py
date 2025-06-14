@@ -14,8 +14,8 @@ st.title("🎭 Klasifikasi Wajah Selebriti")
 st.write("Upload gambar wajah selebriti untuk mengklasifikasikannya menggunakan model **ResNet50**.")
 
 # ==== PATH / ID Google Drive ====
-dataset_zip_url = "https://drive.google.com/file/d/1fE4YSCqulnwUtH5CFABKHh5jU4j5vbl0/view?usp=sharing" 
-model_url = "https://drive.google.com/file/d/1qRGcgJdI3XAJm33Tg7B2hs6t4VY1vR64/view?usp=sharing"        
+dataset_zip_url = "https://drive.google.com/uc?id=1fE4YSCqulnwUtH5CFABKHh5jU4j5vbl0"
+model_url = "https://drive.google.com/uc?id=1qRGcgJdI3XAJm33Tg7B2hs6t4VY1vR64"    
 
 dataset_path = "celebrity_faces_dataset"
 model_path = "resnet50_cfid_model.keras"
