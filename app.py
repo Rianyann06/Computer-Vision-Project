@@ -38,7 +38,7 @@ st.write("Upload gambar wajah selebriti untuk mengklasifikasikannya menggunakan 
 # Load Dataset & Model
 # ======================
 
-data_dir = r'D:\semester 6\ui viskom\Celebrity Faces Dataset'
+data_dir = "data/celebrity_faces_dataset"
 model_path = "resnet50_cfid_model.h5"
 file_id = "1qRGcgJdI3XAJm33Tg7B2hs6t4VY1vR64"  
 gdown_url = f"https://drive.google.com/file/d/1qRGcgJdI3XAJm33Tg7B2hs6t4VY1vR64/view?usp=sharing"
