@@ -42,17 +42,16 @@ data_dir = "data/celebrity_faces_dataset"
 model_path = "resnet50_cfid_model.h5"
 file_id = "1qRGcgJdI3XAJm33Tg7B2hs6t4VY1vR64"  
 gdown_url = f"https://drive.google.com/file/d/1qRGcgJdI3XAJm33Tg7B2hs6t4VY1vR64/view?usp=sharing"
+dataset_url = f"https://drive.google.com/drive/folders/1KAJUGTi1borw3KEX9WNTZPPdAW57h2IC?usp=sharing"
+
 
 if not os.path.exists(model_path):
     with st.spinner("📥 Mengunduh model..."):
         gdown.download(gdown_url, model_path, quiet=False)
 
 if not os.path.exists(data_dir):
-    st.error("❌ Dataset tidak ditemukan! Periksa path dataset.")
-    st.stop()
-else:
-    class_names = sorted(os.listdir(data_dir))
-    st.info(f"📂 Jumlah kelas selebriti terdeteksi: {len(class_names)}")
+    st.warning("📥 Mengunduh dataset dari Google Drive...")
+    gdown.download_folder(dataset_url, output=dataset_path, quiet=False, use_cookies=False)
 
 # Load model
 model_path = "resnet50_cfid_model.keras"
