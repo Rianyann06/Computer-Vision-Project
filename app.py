@@ -24,6 +24,9 @@ model_path = "resnet50_cfid_model.keras"
 if not os.path.exists(dataset_path):
     st.warning("📥 Mengunduh dataset...")
     gdown.download(dataset_zip_url, output="dataset.zip", quiet=False)
+    if not os.path.exists("dataset.zip"):
+        st.error("❌ Gagal mengunduh dataset. Cek URL atau koneksi.")
+        st.stop()
     with zipfile.ZipFile("dataset.zip", "r") as zip_ref:
         zip_ref.extractall("data")
     os.remove("dataset.zip")
@@ -42,7 +45,12 @@ except Exception as e:
     st.stop()
 
 # ==== Kelas ====
-class_names = os.listdir(dataset_path)
+if not os.path.exists(dataset_path) or len(os.listdir(dataset_path)) == 0:
+    st.error("❌ Dataset tidak ditemukan atau kosong. Periksa struktur hasil ekstrak ZIP.")
+    st.stop()
+
+class_names = sorted(os.listdir(dataset_path))
+st.write("📂 Kelas tersedia:", class_names)
 
 # ==== Upload Gambar ====
 uploaded_file = st.file_uploader("📤 Unggah gambar wajah selebriti", type=["jpg", "jpeg", "png"])
@@ -50,6 +58,8 @@ uploaded_file = st.file_uploader("📤 Unggah gambar wajah selebriti", type=["jp
 if uploaded_file is not None:
     try:
         img = Image.open(uploaded_file).convert("RGB")
+        st.write("📏 Ukuran gambar:", img.size)
+
         col1, col2 = st.columns(2)
 
         with col1:
@@ -69,8 +79,12 @@ if uploaded_file is not None:
 
         with col2:
             st.markdown("### 📌 Hasil Prediksi")
-            st.success(f"Wajah ini diprediksi sebagai: **{class_label}**")
-            st.info(f"Tingkat keyakinan: **{confidence:.2f}%**")
+            st.markdown(f"""
+                <div style="text-align:center">
+                    <h2>🎯 Prediksi: <span style='color:green'>{class_label}</span></h2>
+                    <p>✅ Keyakinan: <b>{confidence:.2f}%</b></p>
+                </div>
+            """, unsafe_allow_html=True)
 
     except Exception as e:
         st.error(f"❌ Terjadi kesalahan dalam memproses gambar: {e}")
