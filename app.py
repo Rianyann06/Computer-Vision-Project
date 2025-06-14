@@ -17,7 +17,7 @@ st.write("Upload gambar wajah selebriti untuk mengklasifikasikannya menggunakan 
 dataset_zip_url = "https://drive.google.com/uc?id=1fE4YSCqulnwUtH5CFABKHh5jU4j5vbl0"
 model_url = "https://drive.google.com/uc?id=1qRGcgJdI3XAJm33Tg7B2hs6t4VY1vR64"    
 
-dataset_path = "Celebrity Faces Dataset"
+dataset_path = "data/Celebrity Faces Dataset"
 model_path = "resnet50_cfid_model.keras"
 
 # ==== Download Dataset ====
