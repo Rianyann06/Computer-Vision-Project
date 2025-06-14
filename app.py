@@ -3,58 +3,37 @@ import numpy as np
 from PIL import Image
 import os
 import gdown
+import zipfile
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.resnet50 import preprocess_input
 
-# ======================
-# Konfigurasi Streamlit UI
-# ======================
 st.set_page_config(page_title="Klasifikasi Wajah Selebriti", page_icon="🎭", layout="centered")
 
-st.markdown(
-    """
-    <style>
-    .main {
-        background-color: #f0f2f6;
-    }
-    .stButton > button {
-        background-color: #4CAF50;
-        color: white;
-        font-weight: bold;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-# ======================
-# Judul dan Deskripsi
-# ======================
 st.title("🎭 Klasifikasi Wajah Selebriti")
 st.write("Upload gambar wajah selebriti untuk mengklasifikasikannya menggunakan model **ResNet50**.")
 
-# ======================
-# Load Dataset & Model
-# ======================
+# ==== PATH / ID Google Drive ====
+dataset_zip_url = "https://drive.google.com/file/d/1fE4YSCqulnwUtH5CFABKHh5jU4j5vbl0/view?usp=sharing" 
+model_url = "https://drive.google.com/file/d/1qRGcgJdI3XAJm33Tg7B2hs6t4VY1vR64/view?usp=sharing"        
 
-data_dir = "data/celebrity_faces_dataset"
-model_path = "resnet50_cfid_model.h5"
-file_id = "1qRGcgJdI3XAJm33Tg7B2hs6t4VY1vR64"  
-gdown_url = f"https://drive.google.com/file/d/1qRGcgJdI3XAJm33Tg7B2hs6t4VY1vR64/view?usp=sharing"
-dataset_url = f"https://drive.google.com/drive/folders/1KAJUGTi1borw3KEX9WNTZPPdAW57h2IC?usp=sharing"
-
-
-if not os.path.exists(model_path):
-    with st.spinner("📥 Mengunduh model..."):
-        gdown.download(gdown_url, model_path, quiet=False)
-
-if not os.path.exists(data_dir):
-    st.warning("📥 Mengunduh dataset dari Google Drive...")
-    gdown.download_folder(dataset_url, output=dataset_path, quiet=False, use_cookies=False)
-
-# Load model
+dataset_path = "celebrity_faces_dataset"
 model_path = "resnet50_cfid_model.keras"
+
+# ==== Download Dataset ====
+if not os.path.exists(dataset_path):
+    st.warning("📥 Mengunduh dataset...")
+    gdown.download(dataset_zip_url, output="dataset.zip", quiet=False)
+    with zipfile.ZipFile("dataset.zip", "r") as zip_ref:
+        zip_ref.extractall("data")
+    os.remove("dataset.zip")
+
+# ==== Download Model ====
+if not os.path.exists(model_path):
+    st.warning("📥 Mengunduh model...")
+    gdown.download(model_url, output=model_path, quiet=False)
+
+# ==== Load Model ====
 try:
     model = load_model(model_path)
     st.success("✅ Model berhasil dimuat.")
@@ -62,9 +41,10 @@ except Exception as e:
     st.error(f"❌ Gagal memuat model: {e}")
     st.stop()
 
-# ======================
-# Upload Gambar & Prediksi
-# ======================
+# ==== Kelas ====
+class_names = os.listdir(dataset_path)
+
+# ==== Upload Gambar ====
 uploaded_file = st.file_uploader("📤 Unggah gambar wajah selebriti", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
@@ -94,9 +74,3 @@ if uploaded_file is not None:
 
     except Exception as e:
         st.error(f"❌ Terjadi kesalahan dalam memproses gambar: {e}")
-
-# ======================
-# Footer
-# ======================
-st.markdown("---")
-st.caption("💡 Aplikasi ini dibuat dengan Streamlit dan ResNet50 - oleh Muhammad Fakhrul Hizrian✨")
